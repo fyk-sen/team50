@@ -3,8 +3,8 @@ import joblib
 import os
 from sklearn.ensemble import RandomForestRegressor
 
-DATA_PATH = "data/cleaned_data.csv"
-MODEL_PATH = "model_storage/trained_model.pkl"
+DATA_PATH = "/data/cleaned_data.csv"
+MODEL_PATH = "/model_storage/trained_model.pkl"
 
 def train_model():
     if not os.path.exist(DATA_PATH):
