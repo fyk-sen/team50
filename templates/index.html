@@ -2,9 +2,12 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Parkinson's Disease</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkinson's Disease</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
 </head>
 <style>
 
@@ -28,6 +31,11 @@
         font-size: 2em;
     }
 
+    .grid-item {
+        padding: 20px;
+        text-align: center;
+    }
+    
     .grid-item2 {
         text-align: left;
         padding: 20px;
@@ -61,4 +69,37 @@
                 <input type="submit" value="Upload" name="submit">
             </form>
         </div>
+    </div>
+
+    <div class="grid-container">
+        <div id="csv-container" class="grid-item fadeani" style="display: none; width: 75%;">            {% if tables %}
+            {% for table in tables %}
+            {{ table|safe }}
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable after the page has loaded
+            $('.data').DataTable({
+                "paging": false,
+                "scrollY": "300px", // Set a fixed height for vertical scrolling
+                "scrollCollapse": true, // Allow vertical scrollbar to collapse
+                "fixedHeader": {
+                    "header": true, // Enable fixed header
+                    "footer": false // Disable fixed footer if present
+                },
+                "processing": true, // Show processing indicator
+                "initComplete": function(settings) {
+                    // Once the table initialization is complete, fade in all containers together
+                    $('.fadeani').fadeIn();
+                    $('.data').DataTable().columns.adjust();
+                }
+            });
+        });
+    </script>
+
 </body>
