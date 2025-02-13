@@ -18,10 +18,11 @@ spec:
           volumeMounts:
             - mountPath: "/data"
               name: shared-data
-            - mountPath: "/model"
-              name: shared-model
+            - mountPath: "/model-storage"
+              name: model-storage
       volumes:
         - name: shared-data
           emptyDir: {}
-        - name: shared-model
-          emptyDir: {}
+        - name: model-storage
+          persistentVolumeClaim:
+            claimName: model-pvc
