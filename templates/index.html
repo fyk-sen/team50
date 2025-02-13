@@ -27,6 +27,12 @@
         font-family: Calibri, 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
         font-size: 2em;
     }
+
+    .grid-item2 {
+        text-align: left;
+        padding: 20px;
+        grid-column: 1/span 2;
+    }
 </style>
 
 <body>
@@ -46,4 +52,13 @@
             Output 
         </div>
     </div>
+
+    <div class=grid-container>
+        <div class="grid-item2">
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" id="files" name="file" accept=".csv" required>
+                <label for="files"></label>
+                <input type="submit" value="Upload" name="submit">
+            </form>
+        </div>
 </body>
