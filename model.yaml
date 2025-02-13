@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-train
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-train
+  template:
+    metadata:
+      labels:
+        app: model-train
+    spec:
+      containers:
+        - name: model-train
+          image: model-train:latest
+          volumeMounts:
+            - mountPath: "/data"
+              name: shared-data
+            - mountPath: "/model"
+              name: shared-model
+      volumes:
+        - name: shared-data
+          emptyDir: {}
+        - name: shared-model
+          emptyDir: {}
