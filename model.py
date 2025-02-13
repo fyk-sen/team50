@@ -1,10 +1,20 @@
 import pandas as pd
+import mlflow
+import mlflow.sklearn
 import joblib
 import os
 from sklearn.ensemble import RandomForestRegressor
 
 DATA_PATH = "/data/cleaned_data.csv"
-MODEL_PATH = "/model_storage/trained_model.pkl"
+MODEL_DIR = "/model_storage/"
+MODEL_PATH = os.path.join(MODEL_DIR, "trained_model.pkl")
+
+# Ensure model directory exists
+os.makedirs(MODEL_DIR, exist_ok=True)
+
+# Set up MLflow tracking
+mlflow.set_tracking_uri("http://mlflow-service:5000")  # Change if MLflow is on a different service
+mlflow.set_experiment("Model_Training")
 
 def train_model():
     if not os.path.exist(DATA_PATH):
@@ -16,10 +26,15 @@ def train_model():
     X = data.drop("status", axis=1)
     y = data["status"]
 
-    # Training model
-    print("Training Model...")
-    model = RandomForestRegressor(n_estimators=100)
-    model.fit(X, y)
+    # Parameters
+    n_estimators = 100
+
+    # Training with Mlflow Tracking
+    with mlflow.start_run():
+        # Training model
+        print("Training Model...")
+        model = RandomForestRegressor(n_estimators=n_estimators)
+        model.fit(X, y)
 
     # Save model
     joblib.dumb(model, MODEL_PATH)
