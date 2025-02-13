@@ -4,6 +4,9 @@ import mlflow.sklearn
 import joblib
 import os
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import StratifiedShuffleSplit
+from sklearn.metrics import mean_squared_error, r2_score
+
 
 DATA_PATH = "/data/cleaned_data.csv"
 MODEL_DIR = "/model_storage/"
@@ -26,19 +29,47 @@ def train_model():
     X = data.drop("status", axis=1)
     y = data["status"]
 
+    stratified_split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
+    for train_idx, test_idx in stratified_split.split(X, y):
+        X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
+        y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
+
     # Parameters
     n_estimators = 100
 
     # Training with Mlflow Tracking
     with mlflow.start_run():
+
         # Training model
         print("Training Model...")
         model = RandomForestRegressor(n_estimators=n_estimators)
-        model.fit(X, y)
+        model.fit(X_train, y_train)
 
-    # Save model
-    joblib.dumb(model, MODEL_PATH)
-    print(f"Model has been saved at {MODEL_PATH}")
+        # Predictions
+        y_train_pred = model.predict(X_train)
+        y_test_pred = model.predict(X_test)
+
+        # Compute Metrics
+        train_mse = mean_squared_error(y_train, y_train_pred)
+        train_r2 = r2_score(y_train, y_train_pred)
+
+        test_mse = mean_squared_error(y_test, y_test_pred)
+        test_r2 = r2_score(y_test, y_test_pred)
+
+        # Log parameters & metrics to MLflow
+        mlflow.log_param("n_estimators", n_estimators)
+        mlflow.log_metric("train_mse", train_mse)
+        mlflow.log_metric("train_r2_score", train_r2)
+        mlflow.log_metric("test_mse", test_mse)
+        mlflow.log_metric("test_r2_score", test_r2)
+
+        # Log model in MLflow
+        mlflow.sklearn.log_model(model, "trained_rf_model")
+        print("Model logged to MLflow")
+
+        # Save model
+        joblib.dumb(model, MODEL_PATH)
+        print(f"Model has been saved at {MODEL_PATH}")
 
 if __name__ == "__main__":
     train_model()
