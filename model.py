@@ -8,8 +8,8 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import mean_squared_error, r2_score
 
 
-DATA_PATH = "/data/cleaned_data.csv"
-MODEL_DIR = "/model_storage/"
+DATA_PATH = "/mnt/data/cleaned_data.csv"
+MODEL_DIR = "/mnt/model_storage/"
 MODEL_PATH = os.path.join(MODEL_DIR, "trained_model.pkl")
 
 # Ensure model directory exists
