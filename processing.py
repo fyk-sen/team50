@@ -10,6 +10,7 @@ data = pd.read_csv('raw.csv')
 
 df = data
 df.drop(columns=['name'], inplace=True)
+df.drop_duplicates(inplace=True)
 
 imputer = KNNImputer(n_neighbors=1)
 df[:] = imputer.fit_transform(df)
