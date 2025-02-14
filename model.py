@@ -20,18 +20,21 @@ mlflow.set_tracking_uri("http://mlflow-service:5000")  # Change if MLflow is on 
 mlflow.set_experiment("Model_Training")
 
 def train_model():
-    if not os.path.exist(DATA_PATH):
+    """
+    function to train model
+    """
+    if not os.path.exists(DATA_PATH):
         print("No Data available")
         return
     
     # Read data
     data = pd.read_csv(DATA_PATH)
-    X = data.drop("status", axis=1)
+    x = data.drop("status", axis=1)
     y = data["status"]
 
     stratified_split = StratifiedShuffleSplit(n_splits=1, test_size=0.2, random_state=42)
-    for train_idx, test_idx in stratified_split.split(X, y):
-        X_train, X_test = X.iloc[train_idx], X.iloc[test_idx]
+    for train_idx, test_idx in stratified_split.split(x, y):
+        x_train, x_test = x.iloc[train_idx], x.iloc[test_idx]
         y_train, y_test = y.iloc[train_idx], y.iloc[test_idx]
 
     # Parameters
@@ -43,11 +46,11 @@ def train_model():
         # Training model
         print("Training Model...")
         model = RandomForestRegressor(n_estimators=n_estimators)
-        model.fit(X_train, y_train)
+        model.fit(x_train, y_train)
 
         # Predictions
-        y_train_pred = model.predict(X_train)
-        y_test_pred = model.predict(X_test)
+        y_train_pred = model.predict(x_train)
+        y_test_pred = model.predict(x_test)
 
         # Compute Metrics
         train_mse = mean_squared_error(y_train, y_train_pred)
@@ -68,7 +71,7 @@ def train_model():
         print("Model logged to MLflow")
 
         # Save model
-        joblib.dumb(model, MODEL_PATH)
+        joblib.dump(model, MODEL_PATH)
         print(f"Model has been saved at {MODEL_PATH}")
 
 if __name__ == "__main__":
