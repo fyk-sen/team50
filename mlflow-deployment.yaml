@@ -21,7 +21,7 @@ spec:
         - "--default-artifact-root=/mlflow-artifacts"
         - "--host=0.0.0.0"
         ports:
-        - containerPort: 5000
+        - containerPort: 5002
         volumeMounts:
         - name: mlflow-storage
           mountPath: /mlflow-artifacts
@@ -40,5 +40,5 @@ spec:
     app: mlflow
   ports:
     - protocol: TCP
-      port: 5000
-      targetPort: 5000
+      port: 5002
+      targetPort: 5002
