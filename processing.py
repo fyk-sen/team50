@@ -5,11 +5,11 @@ import pandas as pd
 from sklearn.impute import KNNImputer
 from sklearn.model_selection import StratifiedShuffleSplit
 
-RAW = "/data/raw.csv"
-X_TRAIN = "/data/x_train.csv"
-Y_TRAIN = "/data/y_train.csv"
-X_TEST = "/data/x_test.csv"
-Y_TEST = "/data/y_test.csv"
+RAW = "./data/raw.csv"
+X_TRAIN = "./data/x_train.csv"
+Y_TRAIN = "./data/y_train.csv"
+X_TEST = "./data/x_test.csv"
+Y_TEST = "./data/y_test.csv"
 
 data = pd.read_csv(RAW)
 df = data
