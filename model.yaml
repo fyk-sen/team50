@@ -16,9 +16,9 @@ spec:
         - name: model-train
           image: model-train:latest
           volumeMounts:
-            - mountPath: "/data"
+            - mountPath: "/mnt/data"
               name: shared-data
-            - mountPath: "/model_storage"
+            - mountPath: "/mnt/model_storage"
               name: model_storage
       volumes:
         - name: shared-data
