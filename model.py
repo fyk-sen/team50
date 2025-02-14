@@ -1,8 +1,11 @@
+"""
+Model.py
+"""
+import os
 import pandas as pd
 import mlflow
 import mlflow.sklearn
 import joblib
-import os
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import mean_squared_error, r2_score
@@ -26,7 +29,7 @@ def train_model():
     if not os.path.exists(DATA_PATH):
         print("No Data available")
         return
-    
+
     # Read data
     data = pd.read_csv(DATA_PATH)
     x = data.drop("status", axis=1)
