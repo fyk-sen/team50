@@ -13,3 +13,5 @@ df.drop(columns=['name'], inplace=True)
 
 imputer = KNNImputer(n_neighbors=1)
 df[:] = imputer.fit_transform(df)
+
+df['status'] = data['status'].astype('bool')
