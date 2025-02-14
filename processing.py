@@ -23,7 +23,7 @@ feature_cols = [x for x in df.columns if x != 'status']
 strat_shuff_split = StratifiedShuffleSplit(n_splits=1, test_size=0.3,
                                            random_state=42)
 
-train_idx, test_idx = next(strat_shuff_split.split(df[feature_cols], 
+train_idx, test_idx = next(strat_shuff_split.split(df[feature_cols],
                                                    df['status']))
 X_train = df.loc[train_idx, feature_cols]
 y_train = df.loc[train_idx, 'status']
