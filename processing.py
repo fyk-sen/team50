@@ -2,8 +2,14 @@
 Processes the data.
 """
 import pandas as pd
+from sklearn.impute import KNNImputer
 
 RAW = "/data/raw.csv"
 
 data = pd.read_csv('raw.csv')
-data.drop(columns=['name'], inplace=True)
+
+df = data
+df.drop(columns=['name'], inplace=True)
+
+imputer = KNNImputer(n_neighbors=1)
+df[:] = imputer.fit_transform(df)
