@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: processing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: processing
+  template:
+    metadata:
+      labels:
+        app: processing
+    spec:
+      containers:
+        - name: processing
+          image: processing:latest
+          volumeMounts:
+            - mountPath: "/data"
+              name: shared-data
+      volumes:
+        - name: shared-data
+          emptyDir: {}
