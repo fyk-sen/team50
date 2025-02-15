@@ -11,10 +11,15 @@ from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import mean_squared_error, r2_score
 
 
-X_TRAIN_DATA_PATH = "/mnt/data/x_train.csv"
-X_TEST_DATA_PATH = "/mnt/data/x_test.csv"
-Y_TRAIN_DATA_PATH = "/mnt/data/y_train.csv"
-Y_TEST_DATA_PATH = "/mnt/data/y_test.csv"
+
+# X_TRAIN_DATA_PATH = "x_train.csv"
+# X_TEST_DATA_PATH = "x_test.csv"
+# Y_TRAIN_DATA_PATH = "y_train.csv"
+# Y_TEST_DATA_PATH = "y_test.csv"
+X_TRAIN_DATA_PATH = "/data/x_train.csv"
+X_TEST_DATA_PATH = "/data/x_test.csv"
+Y_TRAIN_DATA_PATH = "/data/y_train.csv"
+Y_TEST_DATA_PATH = "/data/y_test.csv"
 MODEL_DIR = "/mnt/model_storage/"
 MODEL_PATH = os.path.join(MODEL_DIR, "trained_model.pkl")
 
@@ -22,7 +27,7 @@ MODEL_PATH = os.path.join(MODEL_DIR, "trained_model.pkl")
 os.makedirs(MODEL_DIR, exist_ok=True)
 
 # Set up MLflow tracking
-mlflow.set_tracking_uri("http://mlflow-service:5004")  # Change if MLflow is on a different service
+mlflow.set_tracking_uri("http://mlflow-service:5004")
 mlflow.set_experiment("Model_Training")
 
 def train_model():
