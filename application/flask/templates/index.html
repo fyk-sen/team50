@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkinson's Disease</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+</head>
+<style>
+
+    * {
+        margin: 0%;
+        padding: 0%;
+    }
+
+    .grid-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .text {
+        padding: 20px;
+        text-align: left;
+        font-family: Calibri, 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
+        font-size: 2em;
+    }
+
+    .grid-item {
+        padding: 20px;
+        text-align: center;
+    }
+    
+    .grid-item2 {
+        text-align: left;
+        padding: 20px;
+        grid-column: 1/span 2;
+    }
+</style>
+
+<body>
+    <header>
+    <h1>
+        AZURE LASSO DEFECT CLASSIFICATION
+    </h1>
+    <p style="font-size: large;">NYP EGT309 - AI SOLUTION DEVELOPMENT PROJECT</p>
+    </header>
+
+    <div class=grid-container>
+        <div class="text">
+            CSV
+        </div>
+        
+        <div class="text">
+            Output 
+        </div>
+    </div>
+
+    <div class=grid-container>
+        <!-- Upload CSV file -->
+        <div class="grid-item2">
+            <form action="/upload" method="post" enctype="multipart/form-data">
+                <input type="file" id="files" name="file" accept=".csv" required>
+                <label for="files"></label>
+                <input type="submit" value="Upload" name="submit">
+            </form>
+        </div>
+    </div>
+
+    <!-- <div class="grid-container"> -->
+    <div>
+        <!-- Display the first CSV table -->
+        <div id="csv-container1" class="grid-item fadeani" style="display: none; width: 75%;">
+            {% if tables1 %}
+                <h2>CSV 1 Output</h2>
+                {% for table in tables1 %}
+                    {{ table|safe }}
+                {% endfor %}
+            {% endif %}
+        </div>
+
+        <!-- Display the second CSV table -->
+        <div id="csv-container2" class="grid-item fadeani" style="display: none; width: 75%;">
+            {% if tables2 %}
+                <h2>CSV 2 Output</h2>
+                {% for table in tables2 %}
+                    {{ table|safe }}
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Apply DataTable to all tables with the 'data' class
+            $('.data').each(function() {
+                $(this).DataTable({
+                    "paging": false,
+                    "scrollY": "300px",
+                    "scrollCollapse": true,
+                    "fixedHeader": {
+                        "header": true,
+                        "footer": false
+                    },
+                    "processing": true
+                });
+            });
+
+            // Fade in the tables once initialized
+            $('.fadeani').fadeIn();
+        });
+    </script>
+
+</body>
