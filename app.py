@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect
 import pandas as pd
 from io import StringIO
 import os
+import subprocess
 
 app = Flask(__name__)
 
@@ -31,16 +32,18 @@ def upload():
         input_file_path = "./data/raw.csv"
         df.to_csv(input_file_path, index=False) 
 
-
+        # Trigger processing container
+        subprocess.run(['kubectl', 'exec', '-it', 'processing', 'python', 'processing.py'])
 
 
         # Temporarily for testing
-        df2 = pd.read_csv(StringIO(content))
+        # df2 = pd.read_csv(StringIO(content))
+        df_test = pd.read_csv('./data/y_test.csv')
 
         return render_template(
             'index.html', 
             tables1=[df.to_html(classes='data')], titles=df.columns.values,
-            tables2=[df2.to_html(classes='data')], titles2=df2.columns.values
+            tables2=[df_test.to_html(classes='data')], titles2=df_test.columns.values
         )
 
 if __name__ == '__main__':
