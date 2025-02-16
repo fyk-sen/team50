@@ -22,9 +22,14 @@ def upload():
         content = file.read().decode("utf-8")
         df = pd.read_csv(StringIO(content))
 
+        # Temporarily for testing
+        df2 = pd.read_csv(StringIO(content))
+
         return render_template(
-            'index.html', tables=[df.to_html(classes='data')], 
-            titles=df.columns.values)
+            'index.html', 
+            tables1=[df.to_html(classes='data')], titles=df.columns.values,
+            tables2=[df2.to_html(classes='data')], titles2=df2.columns.values
+        )
 
 if __name__ == '__main__':
     app.run(debug=True)

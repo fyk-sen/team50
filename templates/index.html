@@ -72,12 +72,13 @@
         </div>
     </div>
 
-    <div class="grid-container">
+    <!-- <div class="grid-container"> -->
+    <div>
         <!-- Display the first CSV table -->
         <div id="csv-container1" class="grid-item fadeani" style="display: none; width: 75%;">
             {% if tables1 %}
+                <h2>CSV 1 Output</h2>
                 {% for table in tables1 %}
-                    <h2>CSV 1 Output</h2>
                     {{ table|safe }}
                 {% endfor %}
             {% endif %}
@@ -86,33 +87,32 @@
         <!-- Display the second CSV table -->
         <div id="csv-container2" class="grid-item fadeani" style="display: none; width: 75%;">
             {% if tables2 %}
+                <h2>CSV 2 Output</h2>
                 {% for table in tables2 %}
-                    <h2>CSV 2 Output</h2>
                     {{ table|safe }}
                 {% endfor %}
             {% endif %}
         </div>
     </div>
 
-
     <script>
         $(document).ready(function () {
-            // Initialize DataTable after the page has loaded
-            $('.data').DataTable({
-                "paging": false,
-                "scrollY": "300px", // Set a fixed height for vertical scrolling
-                "scrollCollapse": true, // Allow vertical scrollbar to collapse
-                "fixedHeader": {
-                    "header": true, // Enable fixed header
-                    "footer": false // Disable fixed footer if present
-                },
-                "processing": true, // Show processing indicator
-                "initComplete": function(settings) {
-                    // Once the table initialization is complete, fade in all containers together
-                    $('.fadeani').fadeIn();
-                    $('.data').DataTable().columns.adjust();
-                }
+            // Apply DataTable to all tables with the 'data' class
+            $('.data').each(function() {
+                $(this).DataTable({
+                    "paging": false,
+                    "scrollY": "300px",
+                    "scrollCollapse": true,
+                    "fixedHeader": {
+                        "header": true,
+                        "footer": false
+                    },
+                    "processing": true
+                });
             });
+
+            // Fade in the tables once initialized
+            $('.fadeani').fadeIn();
         });
     </script>
 
