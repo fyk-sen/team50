@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect
 import pandas as pd
 from io import StringIO
+import os
 
 app = Flask(__name__)
 
@@ -19,8 +20,19 @@ def upload():
         return redirect(request.url)
 
     if file:
+        # Read the file
         content = file.read().decode("utf-8")
         df = pd.read_csv(StringIO(content))
+
+        # Create file directory if not exists
+        os.makedirs('./data', exist_ok=True)
+
+        # Save the file as raw.csv to shared volume
+        input_file_path = "./data/raw.csv"
+        df.to_csv(input_file_path, index=False) 
+
+
+
 
         # Temporarily for testing
         df2 = pd.read_csv(StringIO(content))
