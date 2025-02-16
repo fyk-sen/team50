@@ -16,7 +16,7 @@ spec:
         - name: training-deployment
           image: training-deployment
           volumeMounts:
-            - mountPath: "/mnt/data"
+            - mountPath: "/data"
               name: shared-data
             - mountPath: "/mnt/model_storage"
               name: model_storage
