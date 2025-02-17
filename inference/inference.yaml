@@ -1,25 +1,42 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: model-infer
+  name: inference
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: model-infer
+      app: inference
   template:
     metadata:
       labels:
-        app: model-infer
+        app: inference
     spec:
       containers:
-        - name: model-infer
-          image: model-infer:latest
+        - name: inference
+          image: inference:latest
+          imagePullPolicy: Never
           volumeMounts:
-            - mountPath: "/model-storage"
-              name: model-storage
+          - name: shared-data 
+            mountPath: "/data"
+          ports:
+          - containerPort:5003    
       volumes:
-        - name: model-storage
+        - name: shared-data
           persistentVolumeClaim:
-            claimName: model-pvc
+            claimName: shared-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference-service
+spec:
+  selector:
+    app: inference
+  ports:
+    - protocol: TCP
+      port: 5003
+      targetPort: 5003
+  type:NodePort
 
