@@ -15,9 +15,26 @@ spec:
       containers:
         - name: processing
           image: processing:latest
+          imagePullPolicy: Never
           volumeMounts:
             - mountPath: "/data"
               name: shared-data
+          ports:
+            - containerPort: 5001
       volumes:
         - name: shared-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: shared-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: processing-service
+spec:
+  selector:
+    app: processing
+  ports:
+    - protocol: TCP
+      port: 5001
+      targetPort: 5001
+  type: NodePort

@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, redirect
+import os
 import pandas as pd
 from io import StringIO
-import os
-import subprocess
+# import subprocess
+import requests
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder="templates")
 
 @app.route('/')
 def index():
@@ -32,8 +33,11 @@ def upload():
         input_file_path = "./data/raw.csv"
         df.to_csv(input_file_path, index=False) 
 
-        # Trigger processing container
-        subprocess.run(['kubectl', 'exec', '-it', 'processing', 'python', 'processing.py'])
+        # # Trigger processing container
+        # subprocess.run(['kubectl', 'exec', '-it', 'processing', 'python', 'processing.py'])
+        # Call the processing container via HTTP
+        processing_url = "http://processing-service:5001/process"
+        requests.post(processing_url)
 
 
         # Temporarily for testing
@@ -47,4 +51,4 @@ def upload():
         )
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True) # Added host and port

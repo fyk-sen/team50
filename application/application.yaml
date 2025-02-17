@@ -15,12 +15,28 @@ spec:
       containers:
       - name: application
         image: application:latest
+        imagePullPolicy: Never
         volumeMounts:
         - name: shared-data
           mountPath: /data
         ports:
         - containerPort: 5000
-
       volumes:
       - name: shared-data
-        emptyDir: {}
+        persistentVolumeClaim:
+          claimName: shared-pvc
+        # emptyDir: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: application-service
+spec:
+  selector:
+    app: application
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+  type: NodePort
