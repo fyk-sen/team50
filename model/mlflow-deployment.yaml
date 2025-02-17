@@ -27,6 +27,7 @@ spec:
         volumeMounts:
         - name: mlflow-storage
           mountPath: /mlflow-artifacts
+      restartPolicy: Always
       volumes:
       - name: mlflow-storage
         persistentVolumeClaim:
@@ -44,3 +45,4 @@ spec:
     - protocol: TCP
       port: 5004
       targetPort: 5004
+      nodePort: 30009  # Fixed external port for MLflow

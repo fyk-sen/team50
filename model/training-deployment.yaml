@@ -6,15 +6,15 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: training-deployment
+      app: training
   template:
     metadata:
       labels:
-        app: training-deployment
+        app: training
     spec:
       containers:
         - name: training-deployment
-          image: training-deployment
+          image: training-deployment:latest
           volumeMounts:
             - mountPath: "/data"
               name: shared-data
@@ -22,7 +22,8 @@ spec:
               name: model_storage
       volumes:
         - name: shared-data
-          emptyDir: {}
+          persistentVolumeClaim:
+            claimName: model-pvc
         - name: model_storage
           persistentVolumeClaim:
             claimName: model-pvc
@@ -40,3 +41,4 @@ spec:
     - protocol: TCP
       port: 5002  
       targetPort: 5002
+      nodePort: 30008  # Fixed port for external access
