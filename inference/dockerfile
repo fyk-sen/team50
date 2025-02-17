@@ -1,6 +1,13 @@
-FROM python:3.9
-WORKDIR /app
-COPY model_infer.py .
-RUN pip install joblib numpy scikit-learn
-CMD ["python", "model_infer.py"]
+FROM python:3.11
+
+WORKDIR /inference
+
+COPY processing.py .
+COPY requirements.txt.
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+EXPOSE 5003
+
+CMD ["python", "inference.py"]
 
