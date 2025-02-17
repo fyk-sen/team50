@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, redirect
 import os
 import pandas as pd
 from io import StringIO
-# import subprocess
 import requests
 
 app = Flask(__name__, template_folder="templates")
@@ -30,24 +29,24 @@ def upload():
         os.makedirs('./data', exist_ok=True)
 
         # Save the file as raw.csv to shared volume
-        input_file_path = "./data/raw.csv"
+        input_file_path = "/data/raw.csv"
         df.to_csv(input_file_path, index=False) 
 
-        # # Trigger processing container
-        # subprocess.run(['kubectl', 'exec', '-it', 'processing', 'python', 'processing.py'])
-        # Call the processing container via HTTP
+        # Trigger the processing container via HTTP
         processing_url = "http://processing-service:5001/process"
         requests.post(processing_url)
 
 
         # Temporarily for testing
         # df2 = pd.read_csv(StringIO(content))
-        df_test = pd.read_csv('./data/y_test.csv')
+        df_test = pd.read_csv('/data/y_test.csv')
 
         return render_template(
             'index.html', 
-            tables1=[df.to_html(classes='data')], titles=df.columns.values,
-            tables2=[df_test.to_html(classes='data')], titles2=df_test.columns.values
+            tables1=[df.to_html(classes='data')], 
+            titles=df.columns.values,
+            tables2=[df_test.to_html(classes='data')], 
+            titles2=df_test.columns.values
         )
 
 if __name__ == '__main__':

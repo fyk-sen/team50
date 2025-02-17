@@ -17,7 +17,7 @@ spec:
           image: processing:latest
           imagePullPolicy: Never
           volumeMounts:
-            - mountPath: "/data"
+            - mountPath: /data
               name: shared-data
           ports:
             - containerPort: 5001
