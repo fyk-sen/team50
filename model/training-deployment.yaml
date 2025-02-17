@@ -15,16 +15,17 @@ spec:
       containers:
         - name: training-deployment
           image: training-deployment:latest
+          imagePullPolicy: Never
           volumeMounts:
             - mountPath: "/data"
               name: shared-data
             - mountPath: "/mnt/model_storage"
-              name: model_storage
+              name: model-storage
       volumes:
         - name: shared-data
           persistentVolumeClaim:
             claimName: model-pvc
-        - name: model_storage
+        - name: model-storage
           persistentVolumeClaim:
             claimName: model-pvc
 

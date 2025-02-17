@@ -24,6 +24,13 @@ spec:
         - "--port=5004"
         ports:
         - containerPort: 5004
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
         volumeMounts:
         - name: mlflow-storage
           mountPath: /mlflow-artifacts
@@ -45,4 +52,3 @@ spec:
     - protocol: TCP
       port: 5004
       targetPort: 5004
-      nodePort: 30009  # Fixed external port for MLflow
