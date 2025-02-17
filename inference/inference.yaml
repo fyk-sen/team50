@@ -16,8 +16,10 @@ spec:
         - name: model-infer
           image: model-infer:latest
           volumeMounts:
-            - mountPath: "/model"
-              name: shared-model
+            - mountPath: "/model-storage"
+              name: model-storage
       volumes:
-        - name: shared-model
-          emptyDir: {}
+        - name: model-storage
+          persistentVolumeClaim:
+            claimName: model-pvc
+

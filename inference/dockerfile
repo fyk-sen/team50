@@ -1,6 +1,6 @@
 FROM python:3.9
 WORKDIR /app
 COPY model_infer.py .
-COPY requirements.txt .
 RUN pip install joblib numpy scikit-learn
 CMD ["python", "model_infer.py"]
+
