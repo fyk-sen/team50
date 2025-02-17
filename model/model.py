@@ -7,7 +7,6 @@ import mlflow
 import mlflow.sklearn
 import joblib
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.model_selection import StratifiedShuffleSplit
 from sklearn.metrics import mean_squared_error, r2_score
 
 
