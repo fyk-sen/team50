@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-infer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-infer
+  template:
+    metadata:
+      labels:
+        app: model-infer
+    spec:
+      containers:
+        - name: model-infer
+          image: model-infer:latest
+          volumeMounts:
+            - mountPath: "/model"
+              name: shared-model
+      volumes:
+        - name: shared-model
+          emptyDir: {}
