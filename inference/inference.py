@@ -9,9 +9,10 @@ from sklearn.metrics import accuracy_score, confusion_matrix, classification_rep
 app = Flask(__name__)
 
 # File paths
-MODEL_PATH = "/data/trained_model.pkl"
+MODEL_PATH = "/mnt/model_storage/trained_model.pkl"  # Model stored in PVC
 METRICS_PATH = "/data/metrics.csv"
-PREDICTIONS_PATH = "/data/predictions.csv"  
+CONFUSION_MATRIX_PATH = "/data/confusion_matrix.csv"
+PREDICTIONS_PATH = "/data/predictions.csv"
 X_TEST_PATH = "/data/x_test.csv"
 Y_TEST_PATH = "/data/y_test.csv"
 
