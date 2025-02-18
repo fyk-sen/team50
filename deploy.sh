@@ -40,3 +40,27 @@ kubectl get pods
 
 echo "Getting Application Service URL..."
 minikube service application-service --url
+
+
+____________________________________________________________________________________________________________________
+minikube start --driver=docker
+eval $(minikube docker-env)
+
+docker build -t model ./model
+docker build -t application ./application
+docker build -t processing ./processing
+docker build -t inference ./inference
+
+kubectl apply -f shared-pv.yaml
+kubectl apply -f shared-pvc.yaml
+kubectl apply -f mlflow-pvc.yaml
+kubectl apply -f model-pvc.yaml
+
+kubectl apply -f application/application.yaml
+kubectl apply -f processing/processing.yaml
+kubectl apply -f inference/inference.yaml
+kubectl apply -f model/model.yaml
+kubectl apply -f mlflow.yaml
+
+minikube service application-service --url
+minikube service mlflow-service --url
