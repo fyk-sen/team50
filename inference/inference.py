@@ -12,7 +12,7 @@ app = Flask(__name__)
 MODEL_PATH = "/mnt/model_storage/trained_model.pkl"
 METRICS_PATH = "/data/metrics.csv"
 CONFUSION_MATRIX_PATH = "/data/confusion_matrix.csv"
-PREDICTIONS_PATH = "/data/predictions.csv"  
+PREDICTIONS_PATH = "/data/predictions.csv"
 X_TEST_PATH = "/data/x_test.csv"
 Y_TEST_PATH = "/data/y_test.csv"
 
@@ -86,7 +86,6 @@ def get_metrics():
         "confusion_matrix": confusion_dict
     })
 
-
 @app.route("/predictions", methods=["GET"])
 def get_predictions():
     """Endpoint to fetch saved predictions."""
@@ -94,7 +93,7 @@ def get_predictions():
         return jsonify({"error": "Predictions file not found. Run evaluation first."}), 404
 
     df = pd.read_csv(PREDICTIONS_PATH)
-    
+
     return jsonify({"predictions": df["Predicted"].tolist()})
 
 

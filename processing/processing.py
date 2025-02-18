@@ -9,15 +9,15 @@ from sklearn.impute import KNNImputer
 from sklearn.model_selection import StratifiedShuffleSplit
 import os
 
-RAW_TRAIN = "./data/raw_train.csv"
-RAW_TEST = "./data/raw_test.csv"
+RAW_TRAIN = "/data/raw_train.csv"
+RAW_TEST = "/data/raw_test.csv"
 
 PROCESSED_TEST = "./data/processed_test.csv"
 
-X_TRAIN = "./data/x_train.csv"
-Y_TRAIN = "./data/y_train.csv"
-X_TEST = "./data/x_test.csv"
-Y_TEST = "./data/y_test.csv"
+X_TRAIN = "/data/x_train.csv"
+Y_TRAIN = "/data/y_train.csv"
+X_TEST = "/data/x_test.csv"
+Y_TEST = "/data/y_test.csv"
 
 
 def clean(clean_df):

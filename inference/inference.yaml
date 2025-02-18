@@ -24,13 +24,18 @@ spec:
           imagePullPolicy: Never
           volumeMounts:
             - mountPath: "/data" 
-              name: shared-data 
+              name: shared-data
+            - mountPath: "/mnt/model_storage"
+              name: model-storage  # PVC for trained model
           ports:
-            - containerPort:5003    
+            - containerPort: 5003
       volumes:
         - name: shared-data
           persistentVolumeClaim:
             claimName: shared-pvc
+        - name: model-storage
+          persistentVolumeClaim:
+            claimName: model-pvc
 
 ---
 apiVersion: v1
