@@ -3,7 +3,12 @@ kind: Deployment
 metadata:
   name: inference
 spec:
-  replicas: 1
+  replicas: 3  #change to 3
+  strategy:
+    type: RollingUpdate #rollout /rollback strategy
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: inference
@@ -12,6 +17,7 @@ spec:
       labels:
         app: inference
     spec:
+      restartPolicy: Always #Ensure pods restart on failure or auto recovery
       containers:
         - name: inference
           image: inference:latest
