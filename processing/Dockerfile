@@ -9,4 +9,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 EXPOSE 5001
 
-CMD ["python", "processing.py"]
+CMD [ "python", "processing.py" ]
