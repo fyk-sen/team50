@@ -140,6 +140,8 @@ ALLOWED_EXTENSIONS = {'csv'}
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
 
+training_complete = False  # Track model training status
+
 def allowed_file(filename):
     """Check if the uploaded file is allowed (CSV only)."""
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
@@ -157,14 +159,16 @@ def training_response_func():
 @app.route('/')
 def index():
     """Render the main page."""
-    return render_template('index.html')
+    global training_complete
+    return render_template('index.html', training_complete=training_complete)
 
 @app.route('/upload', methods=['POST'])
 def upload_train_data():
+    global training_complete
     """Handle training data upload."""
     if 'file' not in request.files:
         return redirect(request.url)
-    
+
     file = request.files['file']
     if file and allowed_file(file.filename):
         content = file.read().decode("utf-8")
@@ -175,7 +179,9 @@ def upload_train_data():
         if processing_response.status_code == 200:
             training_response = training_response_func()
             if training_response.status_code == 200:
-                return "Processing and Training completed successfully!", 200
+                training_complete = True
+                return redirect('/') # Reload page after training
+                # return "Processing and Training completed successfully!", 200
             return "Model training failed.", 500
         return "Processing failed.", 500
 
@@ -183,6 +189,11 @@ def upload_train_data():
 
 @app.route('/upload_test', methods=['POST'])
 def upload_test_data():
+    global training_complete
+
+    if not training_complete:
+        return "Model training not completed yet.", 400
+    
     """Handle test data upload."""
     if 'file' not in request.files:
         return redirect(request.url)
@@ -195,10 +206,11 @@ def upload_test_data():
 
         processing_response = processing_response_func()
         if processing_response.status_code == 200:
-            training_response = training_response_func()
-            if training_response.status_code == 200:
-                return "Processing and Training completed successfully!", 200
-            return "Model training failed.", 500
+            return redirect('/')
+            # training_response = training_response_func()
+            # if training_response.status_code == 200:
+            #     return "Processing and Training completed successfully!", 200
+            # return "Model training failed.", 500
         return "Processing failed.", 500
 
     return 'Invalid file format. Only CSV files are allowed.', 400
