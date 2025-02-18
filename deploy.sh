@@ -43,6 +43,15 @@ minikube service application-service --url
 
 
 ____________________________________________________________________________________________________________________
+
+kubectl delete pods --all
+kubectl delete deployments --all
+kubectl delete services --all
+kubectl delete pvc --all
+kubectl delete pv --all
+
+minikube stop
+minikube delete
 minikube start --driver=docker
 eval $(minikube docker-env)
 

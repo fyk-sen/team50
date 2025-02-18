@@ -1,119 +1,176 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parkinson's Disease</title>
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <title>Parkinson's Disease Detector</title>
 </head>
 <style>
-
-    * {
-        margin: 0%;
-        padding: 0%;
+    body{
+        background: linear-gradient(-45deg, #415800, #e560dc, #ffb374, #ef5f5f, #d840b6);
+        animation: bg 12s ease infinite;
     }
 
-    .grid-container {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-        align-items: center;
-        justify-content: center;
+    @keyframes bg {
+        0% {
+            background-position: 0% 50%;
+        } 50% {
+            background-position: 100% 100%;
+        } 100% {
+            background-position: 0% 50%;
+        }
     }
 
-    .text {
-        padding: 20px;
-        text-align: left;
-        font-family: Calibri, 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', sans-serif;
-        font-size: 2em;
-    }
-
-    .grid-item {
-        padding: 20px;
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
         text-align: center;
     }
-    
-    .grid-item2 {
-        text-align: left;
+
+    .container {
+        width: 80%;
+        margin: auto;
+        background: white;
         padding: 20px;
-        grid-column: 1/span 2;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+    }
+
+    .data-section {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px 0;
+    }
+
+    .input-box {
+        background: #e3e3e3;
+        padding: 20px;
+        border-radius: 10px;
+        width: 40%;
+    }
+
+    button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    button:hover {
+        background: #0056b3;
+    }
+
+    .prediction-section, .metrics-section, .confusion-matrix-section {
+        background: #fff;
+        padding: 20px;
+        margin-top: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background: #007bff;
+        color: white;
+    }
+
+    .download-section {
+        margin-top: 40px;
+    }
+
+    .download-section a {
+        color: #007bff;
+        text-decoration: none;
+        font-size: 18px;
+    }
+
+    .download-section a:hover {
+        color: #0056b3;
+    }
+
+    .confusion-matrix-image {
+        max-width: 100%;
+        height: auto;
+        border: 2px solid #007bff;
+        border-radius: 10px;
+        margin-top: 10px;
     }
 </style>
-
 <body>
-    <header>
-    <h1>
-        AZURE LASSO DEFECT CLASSIFICATION
-    </h1>
-    <p style="font-size: large;">NYP EGT309 - AI SOLUTION DEVELOPMENT PROJECT</p>
-    </header>
 
-    <div class=grid-container>
-        <div class="text">
-            CSV
+    <div class="container">
+        <h1>Parkinson's Disease Detector</h1>
+
+        <div class="data-section">
+            <div class="input-box">
+                <h3>Train Data Input</h3>
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file" id="trainFile" accept=".csv" required>
+                    <button type="submit">Upload Train Data</button>
+                </form>
+            </div>
+
+            <div class="input-box">
+                <h3>Test Data Input</h3>
+                <form action="/upload_test" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file" id="testFile" accept=".csv" required>
+                    <button type="submit">Upload Test Data</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="prediction-section">
+            <h2>Predicted Test Data</h2>
+            {% if prediction_table %}
+                {{ prediction_table | safe }}
+            {% else %}
+                <p>No predictions available.</p>
+            {% endif %}
         </div>
         
-        <div class="text">
-            Output 
-        </div>
-    </div>
-
-    <div class=grid-container>
-        <!-- Upload CSV file -->
-        <div class="grid-item2">
-            <form action="/upload" method="post" enctype="multipart/form-data">
-                <input type="file" id="files" name="file" accept=".csv" required>
-                <label for="files"></label>
-                <input type="submit" value="Upload" name="submit">
-            </form>
-        </div>
-    </div>
-
-    <!-- <div class="grid-container"> -->
-    <div>
-        <!-- Display the first CSV table -->
-        <div id="csv-container1" class="grid-item fadeani" style="display: none; width: 75%;">
-            {% if tables1 %}
-                <h2>CSV 1 Output</h2>
-                {% for table in tables1 %}
-                    {{ table|safe }}
-                {% endfor %}
+        <div class="metrics-section">
+            <h2>Metrics & Graphs</h2>
+            {% if metrics_table %}
+                {{ metrics_table | safe }}
+            {% else %}
+                <p>No metrics available.</p>
             {% endif %}
         </div>
-
-        <!-- Display the second CSV table -->
-        <div id="csv-container2" class="grid-item fadeani" style="display: none; width: 75%;">
-            {% if tables2 %}
-                <h2>CSV 2 Output</h2>
-                {% for table in tables2 %}
-                    {{ table|safe }}
-                {% endfor %}
+        
+        <div class="confusion-matrix-section">
+            <h2>Confusion Matrix</h2>
+            {% if cm_image %}
+                <img src="{{ cm_image }}" class="confusion-matrix-image" alt="Confusion Matrix">
+            {% else %}
+                <p>No confusion matrix available.</p>
             {% endif %}
         </div>
+        
+
     </div>
-
-    <script>
-        $(document).ready(function () {
-            // Apply DataTable to all tables with the 'data' class
-            $('.data').each(function() {
-                $(this).DataTable({
-                    "paging": false,
-                    "scrollY": "300px",
-                    "scrollCollapse": true,
-                    "fixedHeader": {
-                        "header": true,
-                        "footer": false
-                    },
-                    "processing": true
-                });
-            });
-
-            // Fade in the tables once initialized
-            $('.fadeani').fadeIn();
-        });
-    </script>
 
 </body>
+</html>
