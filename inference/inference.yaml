@@ -17,10 +17,10 @@ spec:
           image: inference:latest
           imagePullPolicy: Never
           volumeMounts:
-          - name: shared-data 
-            mountPath: "/data"
+            - mountPath: "/data" 
+              name: shared-data 
           ports:
-          - containerPort:5003    
+            - containerPort:5003    
       volumes:
         - name: shared-data
           persistentVolumeClaim:
@@ -38,5 +38,5 @@ spec:
     - protocol: TCP
       port: 5003
       targetPort: 5003
-  type:NodePort
+  type: NodePort
 
