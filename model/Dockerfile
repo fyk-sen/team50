@@ -1,12 +1,12 @@
 FROM python:3.11
 
-WORKDIR /processing
+WORKDIR /model
 
-COPY processing.py .
+COPY model.py .
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 5001
+EXPOSE 5002
 
-CMD [ "python", "processing.py" ]
+CMD ["python", "model.py"]

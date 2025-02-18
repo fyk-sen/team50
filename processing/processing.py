@@ -2,11 +2,12 @@
 Processes the data.
 """
 import os
+
 import pandas as pd
 from flask import Flask
 from sklearn.impute import KNNImputer
 from sklearn.model_selection import StratifiedShuffleSplit
-
+import os
 
 RAW_TRAIN = "./data/raw_train.csv"
 RAW_TEST = "./data/raw_test.csv"
@@ -86,7 +87,6 @@ def process():
 
     else:
         return "no data file found", 400
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
