@@ -3,6 +3,7 @@ Processes the data.
 """
 import os
 import pandas as pd
+from flask import Flask
 from sklearn.impute import KNNImputer
 from sklearn.model_selection import StratifiedShuffleSplit
 
@@ -61,19 +62,27 @@ def split(split_df):
     y_test.to_csv(Y_TEST, index=False)
 
 
-if os.path.exists(RAW_TRAIN):
-    raw_train = pd.read_csv(RAW_TRAIN)
-    df = raw_train
-    clean(df)
-    split(df)
+app = Flask(__name__)
+
+@app.route('/process', methods=['POST'])
+def process():  
+    if os.path.exists(RAW_TRAIN):
+        raw_train = pd.read_csv(RAW_TRAIN)
+        df = raw_train
+        clean(df)
+        split(df)
+        return "train processing completed", 200
 
 
-elif os.path.exists(RAW_TEST):
-    raw_test = pd.read_csv(RAW_TEST)
-    df = raw_test
-    clean(df)
-    df.to_csv(PROCESSED_TEST, index=False)
+    elif os.path.exists(RAW_TEST):
+        raw_test = pd.read_csv(RAW_TEST)
+        df = raw_test
+        clean(df)
+        df.to_csv(PROCESSED_TEST, index=False)
+        return "test processing completed", 200
 
-
-else:
-    pass
+    else:
+        return "no data file found", 400
+    
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=True)
