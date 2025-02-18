@@ -11,11 +11,12 @@ app = Flask(__name__)
 # File paths
 MODEL_PATH = "/data/trained_model.pkl"
 METRICS_PATH = "/data/metrics.csv"
+PREDICTIONS_PATH = "/data/predictions.csv"  # New file for saving predictions
 X_TEST_PATH = "/data/x_test.csv"
 Y_TEST_PATH = "/data/y_test.csv"
 
 def evaluate_model():
-    """Runs model evaluation and saves metrics."""
+    """Runs model evaluation, saves metrics, and predictions."""
     if not os.path.exists(MODEL_PATH):
         return {"error": "Model not found. Train the model first."}, 404
 
@@ -31,6 +32,10 @@ def evaluate_model():
 
     # Predict
     Y_pred = model.predict(X_test)
+
+    # Convert predictions: True → 1, False → 0
+    if isinstance(Y_pred[0], (bool, np.bool_)):  # Check if predictions are boolean
+        Y_pred = Y_pred.astype(int)  # Convert True → 1, False → 0
 
     # Prepare metrics
     metrics_data = {}
@@ -49,11 +54,19 @@ def evaluate_model():
         metrics_data["mean_squared_error"] = round(mse, 4)
         metrics_data["r2_score"] = round(r2, 4)
 
-    # Save to PVC (CSV format)
+    # Save metrics to PVC (CSV format)
     df_metrics = pd.DataFrame.from_dict(metrics_data, orient="index", columns=["Value"])
     df_metrics.to_csv(METRICS_PATH)
 
-    return {"message": "Metrics saved to PVC", "metrics": metrics_data}, 200
+    # Save predictions as CSV
+    df_predictions = pd.DataFrame({"Predicted": Y_pred})
+    df_predictions.to_csv(PREDICTIONS_PATH, index=False)
+
+    return {
+        "message": "Metrics and predictions saved to PVC",
+        "metrics": metrics_data,
+        "predictions_path": PREDICTIONS_PATH
+    }, 200
 
 
 @app.route("/evaluate", methods=["GET"])
@@ -73,6 +86,17 @@ def get_metrics():
     metrics_dict = df.to_dict()["Value"]
     
     return jsonify({"metrics": metrics_dict})
+
+
+@app.route("/predictions", methods=["GET"])
+def get_predictions():
+    """Endpoint to fetch saved predictions."""
+    if not os.path.exists(PREDICTIONS_PATH):
+        return jsonify({"error": "Predictions file not found. Run evaluation first."}), 404
+
+    df = pd.read_csv(PREDICTIONS_PATH)
+    
+    return jsonify({"predictions": df["Predicted"].tolist()})
 
 
 if __name__ == "__main__":
