@@ -9,10 +9,10 @@ from sklearn.metrics import mean_squared_error, r2_score, accuracy_score, confus
 app = Flask(__name__)
 
 # File paths
-MODEL_PATH = "/model-storage/trained_model.pkl"
-METRICS_PATH = "/model-storage/metrics.csv"
-X_TEST_PATH = "./data/x_test.csv"
-Y_TEST_PATH = "./data/y_test.csv"
+MODEL_PATH = "/data/trained_model.pkl"
+METRICS_PATH = "/data/metrics.csv"
+X_TEST_PATH = "/data/x_test.csv"
+Y_TEST_PATH = "/data/y_test.csv"
 
 def evaluate_model():
     """Runs model evaluation and saves metrics."""
@@ -76,5 +76,5 @@ def get_metrics():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5003)
+    app.run(host="0.0.0.0", port=5003, debug=True)
 
