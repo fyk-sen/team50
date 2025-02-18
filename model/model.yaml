@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model
+  template:
+    metadata:
+      labels:
+        app: model
+    spec:
+      containers:
+      - name: model
+        image: model:latest
+        imagePullPolicy: Never
+        volumeMounts:
+        - mountPath: "/data"
+          name: shared-data
+        - mountPath: "/mnt/model_storage"
+          name: model-storage
+        ports:
+        - containerPort: 5002
+      volumes:
+      - name: shared-data
+        persistentVolumeClaim:
+          claimName: shared-pvc  # Shared PVC used by processing
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-pvc  # PVC for storing trained models
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: model-service
+spec:
+  type: NodePort
+  selector:
+    app: model
+  ports:
+    - protocol: TCP
+      port: 5002  
+      targetPort: 5002
