@@ -2,8 +2,8 @@ FROM python:3.11
 
 WORKDIR /inference
 
-COPY processing.py .
-COPY requirements.txt.
+COPY inference.py .
+COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
