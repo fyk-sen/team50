@@ -131,7 +131,7 @@ import requests
 app = Flask(__name__)
 
 # Define the upload folder
-UPLOAD_FOLDER = '/data'
+UPLOAD_FOLDER = '/data/'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 ALLOWED_EXTENSIONS = {'csv'}
@@ -206,7 +206,7 @@ def upload_test_data():
 
         processing_response = processing_response_func()
         if processing_response.status_code == 200:
-            return redirect('/')
+            return redirect('/fetch_results')
             # training_response = training_response_func()
             # if training_response.status_code == 200:
             #     return "Processing and Training completed successfully!", 200
@@ -222,8 +222,9 @@ def fetch_results():
     response = requests.get(inference_url)
 
     if response.status_code == 200:
+        results = response.json()
         # Read prediction data
-        prediction_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'prediction.csv'))
+        prediction_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'predictions.csv'))
         metrics_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'metrics.csv'))
         cm_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'confusion_matrix.csv'))
 
@@ -232,16 +233,34 @@ def fetch_results():
         metrics_html = metrics_df.to_html(classes='data', index=False)
 
         # Create confusion matrix image
-        cm = cm_df.values
-        plt.figure(figsize=(8, 6))
-        sns.heatmap(cm, annot=True, fmt='g', cmap='Blues', xticklabels=cm_df.columns, yticklabels=cm_df.index)
-        plt.title('Confusion Matrix')
-        plt.ylabel('True Label')
-        plt.xlabel('Predicted Label')
+        if cm_df is not None:
+            cm = cm_df.values
+            plt.figure(figsize=(8, 6))
+            sns.heatmap(cm, annot=True, fmt='g', cmap='Blues', xticklabels=cm_df.columns, yticklabels=cm_df.index)
+            plt.title('Confusion Matrix')
+            plt.ylabel('True Label')
+            plt.xlabel('Predicted Label')
 
-        cm_image_path = os.path.join(UPLOAD_FOLDER, 'confusion_matrix.png')
-        plt.savefig(cm_image_path)
-        plt.close()
+            cm_image_path = os.path.join(UPLOAD_FOLDER, 'confusion_matrix.png')
+            plt.savefig(cm_image_path)
+            plt.close()
+        else:
+            cm_image_path = None
+
+        # # Load confusion matrix image
+        # cm_image_path = results.get("confusion_matrix_image", None)
+
+        # # Create confusion matrix image
+        # cm = cm_df.values
+        # plt.figure(figsize=(8, 6))
+        # sns.heatmap(cm, annot=True, fmt='g', cmap='Blues', xticklabels=cm_df.columns, yticklabels=cm_df.index)
+        # plt.title('Confusion Matrix')
+        # plt.ylabel('True Label')
+        # plt.xlabel('Predicted Label')
+
+        # cm_image_path = os.path.join(UPLOAD_FOLDER, 'confusion_matrix.png')
+        # plt.savefig(cm_image_path)
+        # plt.close()
 
         return render_template(
             "index.html",

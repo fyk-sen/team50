@@ -12,7 +12,7 @@ import os
 RAW_TRAIN = "/data/raw_train.csv"
 RAW_TEST = "/data/raw_test.csv"
 
-PROCESSED_TEST = "./data/processed_test.csv"
+PROCESSED_TEST = "/data/processed_test.csv"
 
 X_TRAIN = "/data/x_train.csv"
 Y_TRAIN = "/data/y_train.csv"
@@ -31,7 +31,7 @@ def clean(clean_df):
     clean_df.drop_duplicates(inplace=True)
 
     imputer = KNNImputer(n_neighbors=1)
-    clean_df[:] = imputer.fit_transform(clean_df)
+    clean_df.loc[:,:] = imputer.fit_transform(clean_df)
 
     return clean_df
 
@@ -80,9 +80,14 @@ def process():
 
     elif os.path.exists(RAW_TEST):
         raw_test = pd.read_csv(RAW_TEST)
-        df = raw_test
-        clean(df)
+        df = clean(raw_test)  # Ensure cleaned data is saved
         df.to_csv(PROCESSED_TEST, index=False)
+
+        if os.path.exists(PROCESSED_TEST):
+            print(f"✅ Processed test data saved at {PROCESSED_TEST}")
+        else:
+            print("❌ Error: Processed test data not found after saving.")
+
         return "test processing completed", 200
 
     else:

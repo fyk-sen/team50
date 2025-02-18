@@ -4,8 +4,8 @@ metadata:
   name: shared-pv
 spec:
   capacity:
-    storage: 1Gi
+    storage: 5Gi
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/mnt/data"  # Adjust based on Minikube
+    path: "/data"  # Adjust based on Minikube
