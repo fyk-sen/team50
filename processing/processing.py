@@ -64,15 +64,18 @@ def split(split_df):
 
 app = Flask(__name__)
 
+
 @app.route('/process', methods=['POST'])
-def process():  
+def process():
+    """
+    Processes the data (actually).
+    """
     if os.path.exists(RAW_TRAIN):
         raw_train = pd.read_csv(RAW_TRAIN)
         df = raw_train
         clean(df)
         split(df)
         return "train processing completed", 200
-
 
     elif os.path.exists(RAW_TEST):
         raw_test = pd.read_csv(RAW_TEST)
@@ -83,6 +86,7 @@ def process():
 
     else:
         return "no data file found", 400
-    
+
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5001, debug=True)
