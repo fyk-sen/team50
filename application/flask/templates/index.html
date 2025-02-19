@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parkinson's Disease Training</title>
+
+    <script>
+        function showTrainingStatus() {
+            document.getElementById("train-status").style.display = "block";
+            document.getElementById("upload-test-btn").disabled = true;
+        }
+
+        function updateTrainingStatus(trainingComplete) {
+            if (trainingComplete) {
+                document.getElementById("train-status").style.display = "none";
+                document.getElementById("train-done").style.display = "block";
+                document.getElementById("upload-test-btn").disabled = false;
+            }
+        }
+    </script>
+</head>
+
+<style>
+    body {
+        background: linear-gradient(-45deg, #415800, #e560dc, #ffb374, #ef5f5f, #d840b6);
+        animation: bg 12s ease infinite;
+        font-family: Arial, sans-serif;
+        text-align: center;
+    }
+    
+    .container {
+        width: 80%;
+        margin: auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        background-color: #007bff;
+        color: white;
+        padding: 15px;
+        border-radius: 5px;
+    }
+
+    .data-section {
+        display: flex;
+        justify-content: space-around;
+        margin: 20px 0;
+    }
+
+    .input-box {
+        background: #e3e3e3;
+        padding: 20px;
+        border-radius: 10px;
+        width: 40%;
+    }
+
+    button {
+        background: #007bff;
+        color: white;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+
+    button:disabled {
+        background: gray;
+        cursor: not-allowed;
+    }
+
+    .status-box {
+        font-weight: bold;
+        margin-top: 10px;
+    }
+
+    #train-status {
+        color: red;
+        display: none;
+    }
+
+    #train-done {
+        color: green;
+        display: none;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+    th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: center;
+    }
+
+    th {
+        background: #007bff;
+        color: white;
+    }
+</style>
+
+<body onload="updateTrainingStatus({{ training_complete|tojson }})">
+    <div class="container">
+        <h1>Parkinson's Disease Detector</h1>
+
+        <div class="data-section">
+            <div class="input-box">
+                <h3>Train Data Input</h3>
+                <form action="/upload" method="POST" enctype="multipart/form-data" onsubmit="showTrainingStatus()">
+                    <input type="file" name="file" accept=".csv" required>
+                    <button type="submit">Upload Train Data</button>
+                </form>
+                <p id="train-status" class="status-box">Training in Progress...</p>
+                <p id="train-done" class="status-box">✅ Model has been trained.</p>
+            </div>
+        </div>
+
+        <div class="prediction-section">
+            <h2>Predicted Test Data</h2>
+            {% if prediction_table %}
+                {{ prediction_table | safe }}
+            {% else %}
+                <p>No predictions available.</p>
+            {% endif %}
+        </div>
+        
+        <div class="metrics-section">
+            <h2>Metrics & Graphs</h2>
+            {% if metrics_table %}
+                {{ metrics_table | safe }}
+            {% else %}
+                <p>No metrics available.</p>
+            {% endif %}
+        </div>
+
+        <div class="confusion-matrix-section">
+            <h2>Confusion Matrix</h2>
+            {% if cm_table %}
+                {{ cm_table | safe }}
+            {% else %}
+                <p>No metrics available.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

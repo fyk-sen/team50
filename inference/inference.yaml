@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference
+spec:
+  replicas: 3  #change to 3
+  strategy:
+    type: RollingUpdate #rollout /rollback strategy
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: inference
+  template:
+    metadata:
+      labels:
+        app: inference
+    spec:
+      restartPolicy: Always #Ensure pods restart on failure or auto recovery
+      containers:
+        - name: inference
+          image: inference:latest
+          imagePullPolicy: Never
+          volumeMounts:
+            - mountPath: "/data" 
+              name: shared-data
+            - mountPath: "/mnt/model_storage"
+              name: model-storage  # PVC for trained model
+          ports:
+            - containerPort: 5003
+      volumes:
+        - name: shared-data
+          persistentVolumeClaim:
+            claimName: shared-pvc
+        - name: model-storage
+          persistentVolumeClaim:
+            claimName: model-pvc
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inference-service
+spec:
+  selector:
+    app: inference
+  ports:
+    - protocol: TCP
+      port: 5003
+      targetPort: 5003
+  type: NodePort
+
