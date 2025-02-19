@@ -12,7 +12,7 @@ import os
 RAW_TRAIN = "/data/raw_train.csv"
 RAW_TEST = "/data/raw_test.csv"
 
-PROCESSED_TEST = "./data/processed_test.csv"
+PROCESSED_TEST = "/data/x_test.csv"
 
 X_TRAIN = "/data/x_train.csv"
 Y_TRAIN = "/data/y_train.csv"
@@ -31,7 +31,7 @@ def clean(clean_df):
     clean_df.drop_duplicates(inplace=True)
 
     imputer = KNNImputer(n_neighbors=1)
-    clean_df[:] = imputer.fit_transform(clean_df)
+    clean_df.loc[:,:] = imputer.fit_transform(clean_df)
 
     return clean_df
 

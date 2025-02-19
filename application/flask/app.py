@@ -215,41 +215,101 @@ def upload_test_data():
 
     return 'Invalid file format. Only CSV files are allowed.', 400
 
-@app.route('/fetch_results', methods=['GET'])
+# @app.route('/fetch_results', methods=['GET'])
+# def fetch_results():
+#     """Fetch results from the inference service."""
+#     inference_url = "http://inference-service:5003/process_inference"
+#     response = requests.get(inference_url)
+
+#     if response.status_code == 200:
+#         # Read prediction data
+#         prediction_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'prediction.csv'))
+#         metrics_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'metrics.csv'))
+#         cm_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'confusion_matrix.csv'))
+
+#         # Convert data to HTML tables
+#         prediction_html = prediction_df.to_html(classes='data', index=False)
+#         metrics_html = metrics_df.to_html(classes='data', index=False)
+
+#         # Create confusion matrix image
+#         cm = cm_df.values
+#         plt.figure(figsize=(8, 6))
+#         sns.heatmap(cm, annot=True, fmt='g', cmap='Blues', xticklabels=cm_df.columns, yticklabels=cm_df.index)
+#         plt.title('Confusion Matrix')
+#         plt.ylabel('True Label')
+#         plt.xlabel('Predicted Label')
+
+#         cm_image_path = os.path.join(UPLOAD_FOLDER, 'confusion_matrix.png')
+#         plt.savefig(cm_image_path)
+#         plt.close()
+
+#         return render_template(
+#             "index.html",
+#             prediction_table=prediction_html,
+#             metrics_table=metrics_html,
+#             cm_image=cm_image_path
+#         )
+#     return f"Error fetching results: {response.json()}", 500
+
+@app.route("/fetch_results", methods=["GET"])
 def fetch_results():
-    """Fetch results from the inference service."""
-    inference_url = "http://inference-service:5003/metrics"
+    """Fetch predictions, confusion matrix, and classification report from the inference service."""
+    inference_url = "http://inference-service:5003/process_inference"
     response = requests.get(inference_url)
 
     if response.status_code == 200:
-        # Read prediction data
-        prediction_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'prediction.csv'))
-        metrics_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'metrics.csv'))
-        cm_df = pd.read_csv(os.path.join(UPLOAD_FOLDER, 'confusion_matrix.csv'))
+        results = response.json()
 
-        # Convert data to HTML tables
-        prediction_html = prediction_df.to_html(classes='data', index=False)
-        metrics_html = metrics_df.to_html(classes='data', index=False)
+        # Convert to DataFrame
+        prediction_df = pd.DataFrame(results["predictions"])
+        metrics_df = pd.DataFrame(results["classification_report"]).T
+        confusion_df = pd.DataFrame(results["confusion_matrix"])
 
-        # Create confusion matrix image
-        cm = cm_df.values
-        plt.figure(figsize=(8, 6))
-        sns.heatmap(cm, annot=True, fmt='g', cmap='Blues', xticklabels=cm_df.columns, yticklabels=cm_df.index)
-        plt.title('Confusion Matrix')
-        plt.ylabel('True Label')
-        plt.xlabel('Predicted Label')
-
-        cm_image_path = os.path.join(UPLOAD_FOLDER, 'confusion_matrix.png')
-        plt.savefig(cm_image_path)
-        plt.close()
+        # Convert to HTML tables
+        prediction_html = prediction_df.to_html(classes="data", index=False)
+        metrics_html = metrics_df.to_html(classes="data", index=False)
 
         return render_template(
             "index.html",
             prediction_table=prediction_html,
-            metrics_table=metrics_html,
-            cm_image=cm_image_path
+            metrics_table=metrics_html
         )
-    return f"Error fetching results: {response.json()}", 500
+
+    return "Error fetching results", 500
+
+    #     # Convert to DataFrame for rendering
+    #     predictions_df = pd.DataFrame(results["predictions"])
+    #     metrics_df = pd.DataFrame(results["classification_report"])
+    #     confusion_df = pd.DataFrame(results["confusion_matrix"])
+
+    #     # Save CSVs in the shared `/data` folder for persistence
+    #     predictions_df.to_csv(os.path.join(UPLOAD_FOLDER, 'predictions.csv'), index=False)
+    #     metrics_df.to_csv(os.path.join(UPLOAD_FOLDER, 'metrics.csv'))
+    #     confusion_df.to_csv(os.path.join(UPLOAD_FOLDER, 'confusion_matrix.csv'))
+
+    #     # Convert data to HTML
+    #     prediction_html = pd.DataFrame(results["predictions"]).to_html(classes="data", index=False)
+    #     metrics_html = pd.DataFrame(results["classification_report"]).to_html(classes="data", index=False)
+
+    #     # Create and save confusion matrix image
+    #     cm = confusion_df.values
+    #     plt.figure(figsize=(6, 5))
+    #     sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=confusion_df.columns, yticklabels=confusion_df.index)
+    #     plt.title("Confusion Matrix")
+    #     plt.ylabel("True Label")
+    #     plt.xlabel("Predicted Label")
+
+    #     cm_image_path = os.path.join(UPLOAD_FOLDER, 'confusion_matrix.png')
+    #     plt.savefig(cm_image_path)
+    #     plt.close()
+
+    #     return render_template(
+    #         "index.html",
+    #         prediction_table=prediction_html,
+    #         metrics_table=metrics_html,
+    #         cm_image=cm_image_path
+    #     )
+    # return "Error fetching results", 500
 
 
 if __name__ == '__main__':
