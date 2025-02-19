@@ -8,4 +8,4 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: "/data"  # Adjust based on Minikube
+    path: /mnt/data  # Adjust based on Minikube

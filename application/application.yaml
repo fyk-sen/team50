@@ -3,7 +3,12 @@ kind: Deployment
 metadata:
   name: application
 spec:
-  replicas: 1
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
   selector:
     matchLabels:
       app: application
@@ -12,6 +17,7 @@ spec:
       labels:
         app: application
     spec:
+      restartPolicy: Always
       containers:
       - name: application
         image: application:latest
