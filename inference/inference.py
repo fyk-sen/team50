@@ -17,7 +17,7 @@ def evaluate_model():
     if not os.path.exists(MODEL_PATH):
         return {"error": "Model not found. Train the model first."}, 404
 
-    if not os.path.exists(PROCESSED_TEST_PATH):
+    if not os.path.exists(X_TEST_PATH) or not os.path.exists(Y_TEST_PATH):
         return {"error": "Processed data files not found. Ensure test data and labels are available."}, 404
 
     model = joblib.load(MODEL_PATH)
