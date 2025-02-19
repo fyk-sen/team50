@@ -51,27 +51,6 @@ def upload_train_data():
 
     return 'Invalid file format. Only CSV files are allowed.', 400
 
-@app.route('/upload_test', methods=['POST'])
-def upload_test_data():
-    global training_complete
-
-    if not training_complete:
-        return "Model training not completed yet.", 400
-
-    if 'file' not in request.files:
-        return redirect(request.url)
-
-    file = request.files['file']
-    if file and allowed_file(file.filename):
-        df = pd.read_csv(StringIO(file.read().decode("utf-8")))
-        df.to_csv(os.path.join(UPLOAD_FOLDER, "raw_test.csv"), index=False)
-
-        if processing_response_func().status_code == 200:
-            return redirect('/fetch_results')
-
-        return "Processing failed.", 500
-
-    return 'Invalid file format. Only CSV files are allowed.', 400
 
 @app.route('/fetch_results', methods=['GET'])
 def fetch_results():

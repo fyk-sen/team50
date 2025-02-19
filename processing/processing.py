@@ -1,8 +1,6 @@
 """
 Processes the data.
 """
-import os
-
 import pandas as pd
 from flask import Flask
 from sklearn.impute import KNNImputer

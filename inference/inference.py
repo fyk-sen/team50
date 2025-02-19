@@ -2,8 +2,6 @@ from flask import Flask, jsonify
 import joblib
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
 
 app = Flask(__name__)

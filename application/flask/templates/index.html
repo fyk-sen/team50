@@ -120,14 +120,6 @@
                 <p id="train-status" class="status-box">Training in Progress...</p>
                 <p id="train-done" class="status-box">✅ Model has been trained.</p>
             </div>
-<!-- 
-            <div class="input-box">
-                <h3>Test Data Input</h3>
-                <form action="/upload_test" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="file" accept=".csv" required>
-                    <button type="submit" id="upload-test-btn" disabled>Upload Test Data</button>
-                </form>
-            </div> -->
         </div>
 
         <div class="prediction-section">
@@ -156,15 +148,6 @@
                 <p>No metrics available.</p>
             {% endif %}
         </div>
-        
-        <!-- <div class="confusion-matrix-section">
-            <h2>Confusion Matrix</h2>
-            {% if cm_image %}
-                <img src="{{ cm_image }}" alt="Confusion Matrix" width="400">
-            {% else %}
-                <p>No confusion matrix available.</p>
-            {% endif %}
-        </div> -->
     </div>
 </body>
 </html>
