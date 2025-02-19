@@ -27,11 +27,13 @@ def evaluate_model():
     Y_pred = model.predict(X_test)
     cm = confusion_matrix(Y_test, Y_pred).tolist()
     classification_rep = classification_report(Y_test, Y_pred, output_dict=True)
+    predictions = pd.DataFrame({"actual": Y_test, "predicted": Y_pred})
 
     return {
         "message": "Evaluation completed successfully",
         "classification_report": classification_rep,
-        "confusion_matrix": cm
+        "confusion_matrix": cm,
+        "predictions": predictions.to_dict(orient="records")
     }, 200
 
 @app.route("/evaluate", methods=["GET"])

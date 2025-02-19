@@ -120,17 +120,17 @@
                 <p id="train-status" class="status-box">Training in Progress...</p>
                 <p id="train-done" class="status-box">✅ Model has been trained.</p>
             </div>
-
+<!-- 
             <div class="input-box">
                 <h3>Test Data Input</h3>
                 <form action="/upload_test" method="POST" enctype="multipart/form-data">
                     <input type="file" name="file" accept=".csv" required>
                     <button type="submit" id="upload-test-btn" disabled>Upload Test Data</button>
                 </form>
-            </div>
+            </div> -->
         </div>
 
-        <!-- <div class="prediction-section">
+        <div class="prediction-section">
             <h2>Predicted Test Data</h2>
             {% if prediction_table %}
                 {{ prediction_table | safe }}
@@ -138,7 +138,7 @@
                 <p>No predictions available.</p>
             {% endif %}
         </div>
-         -->
+        
         <div class="metrics-section">
             <h2>Metrics & Graphs</h2>
             {% if metrics_table %}

@@ -84,6 +84,7 @@ def fetch_results():
             "index.html",
             metrics_table=pd.DataFrame(data["classification_report"]).transpose().to_html(classes='data', index=True),
             cm_table=pd.DataFrame(data["confusion_matrix"], index=["Actual 0", "Actual 1"], columns=["Predicted 0", "Predicted 1"]).to_html(classes='data', index=True),
+            prediction_table=data["predictions"],
             training_complete=True
         )
     
