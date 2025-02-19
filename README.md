@@ -68,6 +68,9 @@ To deploy the services in a Minikube environment, follow these steps:
         ```       
 
         ![MLflow Service](images/Ml-flow.png)
+        If you are unable to access the MLflow Service, it is likely due to minikube issues. 
+        
+        Should you encounter this issue, please restart your minikube.
 
 These commands will deploy the application and provide URLs to access the services.
 
